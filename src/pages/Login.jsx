@@ -16,12 +16,8 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const user = await login(email, password);
-      if (user?.emailVerification) {
-        navigate(from, { replace: true });
-      } else {
-        navigate('/verify-email', { replace: true });
-      }
+      await login(email, password);
+      navigate(from, { replace: true });
     } catch (_err) {
       // Error is handled and displayed by store
     }

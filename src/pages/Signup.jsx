@@ -15,7 +15,7 @@ export default function Signup() {
     e.preventDefault();
     try {
       await signup(name, email, password);
-      navigate('/verify-email', { replace: true });
+      navigate('/dashboard', { replace: true });
     } catch (_err) {
       // Error is handled and displayed by store
     }

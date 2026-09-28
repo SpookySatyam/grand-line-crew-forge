@@ -96,7 +96,7 @@ const formatUser = (acc) => {
     $id: acc.$id,
     name: acc.name || 'Captain',
     email: acc.email,
-    emailVerification: Boolean(acc.emailVerification),
+    emailVerification: true,
   };
 };
 
@@ -144,13 +144,7 @@ export const useAuthStore = create((set) => ({
       }
       await account.createEmailPasswordSession(email, password);
 
-      // 3. Dispatch verification email
-      const verifyUrl = `${window.location.origin}/verify-email`;
-      try {
-        await account.createVerification(verifyUrl);
-      } catch (verifyErr) {
-        console.warn('Initial verification email dispatch:', verifyErr);
-      }
+      // 3. Dispatch verification email (Disabled)
 
       // 4. Fetch current user
       const acc = await account.get();
