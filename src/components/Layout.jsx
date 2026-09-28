@@ -7,7 +7,7 @@ import PageTransition from './animation/PageTransition';
 
 export default function Layout() {
   return (
-    <div className="min-h-screen flex flex-col relative bg-black font-sans text-parchment overflow-x-hidden selection:bg-pirateRed/30 selection:text-gold">
+    <div className="min-h-screen flex flex-col relative font-sans text-parchment overflow-x-hidden selection:bg-pirateRed/30 selection:text-gold">
       {/* Global Background Layer */}
       <CinematicCrewBackground />
 

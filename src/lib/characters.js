@@ -77,6 +77,6 @@ export const groupAssets = {
 
 export const backgroundAssets = {
   cinematic: {
-    image: "/assets/one-piece/12-cinematic-background.jpg",
+    image: "/assets/one-piece/ship-bg.jpg",
   }
 };

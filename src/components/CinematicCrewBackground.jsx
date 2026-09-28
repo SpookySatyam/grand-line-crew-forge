@@ -21,7 +21,7 @@ export default function CinematicCrewBackground() {
       />
       
       {/* Deep Ocean Overlay (Gradient) */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black via-deepOcean/80 to-transparent"></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-black via-deepOcean/50 to-transparent opacity-80"></div>
 
       {/* Atmospheric Fog */}
       <motion.div 
