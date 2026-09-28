@@ -10,7 +10,6 @@ const authLimiter = rateLimit({
   max: 10, // limit each IP to 10 requests per windowMs
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-  keyGenerator: (req) => req.ip || req.headers['x-forwarded-for'] || 'unknown',
   message: { success: false, message: 'Too many authentication attempts, please try again after 15 minutes' },
 });
 

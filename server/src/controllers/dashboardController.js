@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import { Recruit } from '../models/Recruit.js';
 import { Crew } from '../models/Crew.js';
 import { Challenge } from '../models/Challenge.js';
@@ -8,13 +9,15 @@ import { Challenge } from '../models/Challenge.js';
 export const getDashboardStats = async (req, res, next) => {
   try {
     const owner = req.user._id;
+    // Aggregate pipelines don't auto-cast like find(), so we need a proper ObjectId
+    const ownerObjectId = new mongoose.Types.ObjectId(owner);
 
     // 1. Total Recruits
     const totalRecruits = await Recruit.countDocuments({ owner });
 
     // 2. Count per role
     const roleCountsAggr = await Recruit.aggregate([
-      { $match: { owner } },
+      { $match: { owner: ownerObjectId } },
       { $group: { _id: '$roleKey', count: { $sum: 1 } } }
     ]);
     
@@ -26,7 +29,7 @@ export const getDashboardStats = async (req, res, next) => {
 
     // 3. Top Skills (useful for CrewSynergy)
     const skillsAggr = await Recruit.aggregate([
-      { $match: { owner } },
+      { $match: { owner: ownerObjectId } },
       { $unwind: '$skills' },
       { $group: { _id: '$skills', count: { $sum: 1 } } },
       { $sort: { count: -1 } },
@@ -35,7 +38,7 @@ export const getDashboardStats = async (req, res, next) => {
 
     // 4. Top Interests (useful for CrewSynergy)
     const interestsAggr = await Recruit.aggregate([
-      { $match: { owner } },
+      { $match: { owner: ownerObjectId } },
       { $unwind: '$interests' },
       { $group: { _id: '$interests', count: { $sum: 1 } } },
       { $sort: { count: -1 } },
@@ -47,7 +50,7 @@ export const getDashboardStats = async (req, res, next) => {
 
     // 6. Average Balance Score
     const balanceAggr = await Crew.aggregate([
-      { $match: { owner } },
+      { $match: { owner: ownerObjectId } },
       { $group: { _id: null, averageBalanceScore: { $avg: '$balanceScore' } } }
     ]);
     const averageBalanceScore = balanceAggr.length > 0 ? Math.round(balanceAggr[0].averageBalanceScore) : 0;

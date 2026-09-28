@@ -6,12 +6,11 @@ export const apiFetch = async (endpoint, options = {}) => {
 
   const fetchOptions = {
     ...options,
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
       ...(options.headers || {}),
     },
-    // Required to send and receive cookies from the backend
-    // Since vite proxy forwards the request, this works locally too
   };
 
   const response = await fetch(url, fetchOptions);
