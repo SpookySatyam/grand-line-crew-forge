@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-parchment text-deepBrown font-sans antialiased;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display tracking-wider text-darkBrown;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply relative overflow-hidden bg-pirateRed text-offWhite px-6 py-3 rounded-md font-display text-xl uppercase tracking-widest shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 active:translate-y-0 active:shadow-md;
+  }
+  
+  .card-parchment {
+    @apply bg-offWhite/80 backdrop-blur-sm border-2 border-gold/30 rounded-lg shadow-xl overflow-hidden;
+  }
+}
