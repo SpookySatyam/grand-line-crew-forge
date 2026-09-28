@@ -35,6 +35,14 @@ const challengeSchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
+    tags: {
+      type: [String],
+      default: [],
+    },
+    minTeamSize: {
+      type: Number,
+      default: 1,
+    },
   },
   { timestamps: true }
 );

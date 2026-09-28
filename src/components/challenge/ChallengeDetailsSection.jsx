@@ -1,7 +1,18 @@
 import React from 'react';
 import OverseerBadge from './OverseerBadge';
 
-export default function ChallengeDetailsSection({ challenge, secondaryChar }) {
+export default function ChallengeDetailsSection({ challenge, secondaryChar, crew }) {
+  // Generate a dynamic explanation
+  const crewRoles = crew ? [...new Set(crew.members.map(m => m.role))] : [];
+  const reqSkills = challenge.requiredSkills || [];
+  
+  let explanation = "This challenge is a great fit for your crew's capabilities.";
+  if (reqSkills.length > 0 && crewRoles.length > 0) {
+    const rolesText = crewRoles.slice(0, 2).join(" and ");
+    const skillsText = reqSkills.slice(0, 3).join(", ");
+    explanation = `This challenge suits your crew because it covers ${skillsText}, supported by your ${rolesText} roles.`;
+  }
+
   return (
     <div className="p-8 md:w-2/3 flex flex-col justify-center relative overflow-hidden bg-gradient-to-br from-darkBrown/90 to-deepOcean/90">
       {/* Decorative SVG */}
@@ -50,20 +61,9 @@ export default function ChallengeDetailsSection({ challenge, secondaryChar }) {
 
         <div className="border-t border-gold/20 pt-6 mt-auto">
           <h4 className="text-[10px] uppercase tracking-[0.2em] text-gold/60 mb-4 font-sans">Strategic Analysis</h4>
-          <ul className="space-y-3 text-sm text-parchment/80 font-sans grid grid-cols-1 md:grid-cols-2 gap-x-4">
-            <li className="flex items-center gap-3 bg-black/30 p-2.5 rounded-lg border border-white/5">
-              <span className="text-green-400 text-lg drop-shadow-sm bg-green-400/10 w-6 h-6 flex items-center justify-center rounded-full leading-none">✓</span> 
-              Skill Match Confirmed
-            </li>
-            <li className="flex items-center gap-3 bg-black/30 p-2.5 rounded-lg border border-white/5">
-              <span className="text-green-400 text-lg drop-shadow-sm bg-green-400/10 w-6 h-6 flex items-center justify-center rounded-full leading-none">✓</span> 
-              Role Coverage Optimal
-            </li>
-            <li className="flex items-center gap-3 bg-black/30 p-2.5 rounded-lg border border-white/5">
-              <span className="text-green-400 text-lg drop-shadow-sm bg-green-400/10 w-6 h-6 flex items-center justify-center rounded-full leading-none">✓</span> 
-              Power Level Aligned
-            </li>
-          </ul>
+          <p className="text-sm text-parchment/80 font-sans italic">
+            "{explanation}"
+          </p>
         </div>
       </div>
     </div>

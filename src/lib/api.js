@@ -24,8 +24,10 @@ const getAppwriteJwt = async () => {
       cachedJwtExpiry = now + 14 * 60 * 1000;
       return cachedJwt;
     }
-  } catch (_err) {
-    // Not logged in or session expired
+  } catch (err) {
+    if (err?.code === 501 || err?.type === 'user_auth_method_unsupported') {
+      console.warn('Appwrite JWT authentication is disabled in your Appwrite project console. Please enable JWT under Auth -> Security/Settings in Appwrite Console.');
+    }
     clearCachedToken();
     return null;
   }
@@ -51,9 +53,9 @@ export const apiFetch = async (endpoint, options = {}) => {
 
   const response = await fetch(url, fetchOptions);
   
-  if (response.status === 401) {
+  if (response.status === 401 && token) {
     clearCachedToken();
-    // Dispatch event so the auth store can log out
+    // Dispatch event so the auth store can verify session and log out if expired
     window.dispatchEvent(new Event('auth:unauthorized'));
   }
 

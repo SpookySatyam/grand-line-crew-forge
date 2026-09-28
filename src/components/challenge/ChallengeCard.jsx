@@ -21,6 +21,7 @@ export default function ChallengeCard({ crew, challenge, compatibilityScore, sec
       <ChallengeDetailsSection 
         challenge={challenge} 
         secondaryChar={secondaryChar} 
+        crew={crew}
       />
     </motion.div>
   );

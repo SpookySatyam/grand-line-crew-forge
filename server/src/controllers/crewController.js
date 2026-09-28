@@ -166,13 +166,28 @@ export const assignChallenges = async (req, res, next) => {
       return res.status(400).json({ success: false, message: 'No challenges exist' });
     }
 
-    // Simple round-robin assignment mapping algorithm
+    // Intelligent assignment algorithm based on capabilities
     for (let i = 0; i < crews.length; i++) {
-      const challenge = challenges[i % challenges.length];
-      const compScore = calculateCompatibilityScore(crews[i].members, challenge);
+      let bestChallenge = null;
+      let highestScore = -1;
+
+      for (const challenge of challenges) {
+        const compScore = calculateCompatibilityScore(crews[i].members, challenge);
+        if (compScore > highestScore) {
+          highestScore = compScore;
+          bestChallenge = challenge;
+        }
+      }
+
+      if (bestChallenge && highestScore > 0) {
+        crews[i].challenge = bestChallenge._id;
+        crews[i].compatibilityScore = highestScore;
+      } else {
+        // If no challenge is suitable at all
+        crews[i].challenge = undefined;
+        crews[i].compatibilityScore = 0;
+      }
       
-      crews[i].challenge = challenge._id;
-      crews[i].compatibilityScore = compScore;
       await crews[i].save();
     }
 

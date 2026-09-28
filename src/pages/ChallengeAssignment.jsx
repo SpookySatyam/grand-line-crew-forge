@@ -66,7 +66,15 @@ export default function ChallengeAssignment() {
           const secondaryCharKey = secondaryKeys[idx % secondaryKeys.length];
           const secondaryChar = secondaryCharacters[secondaryCharKey];
 
-          if (!challenge) return null;
+          if (!challenge) {
+            return (
+              <div key={crew._id} className="bg-darkBrown/80 backdrop-blur-md p-8 rounded-2xl border border-gold/30 shadow-2xl text-center">
+                <h3 className="text-3xl text-pirateRed mb-2 font-display">{crew.name}</h3>
+                <p className="text-parchment/80 font-sans mb-4">Your crew does not currently meet the capabilities required for any available challenges.</p>
+                <p className="text-gold font-sans italic">Consider recruiting members with different skills and roles, or create easier challenges.</p>
+              </div>
+            );
+          }
 
           return (
             <ChallengeCard 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Skull } from 'lucide-react';
@@ -7,11 +7,18 @@ import { useAuthStore } from '../store/useAuthStore';
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { login, loading, error } = useAuthStore();
+  const { login, loading, error, user } = useAuthStore();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const from = location.state?.from?.pathname || '/dashboard';
+  const targetFrom = location.state?.from?.pathname;
+  const from = (targetFrom && targetFrom !== '/login' && targetFrom !== '/verify-email') ? targetFrom : '/dashboard';
+
+  useEffect(() => {
+    if (user && !loading) {
+      navigate(from, { replace: true });
+    }
+  }, [user, loading, from, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

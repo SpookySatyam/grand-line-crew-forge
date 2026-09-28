@@ -9,6 +9,8 @@ const challengeSchema = z.object({
   type: z.enum(['Frontend', 'Backend', 'Fullstack'], { errorMap: () => ({ message: 'Invalid type' }) }),
   requiredSkills: z.array(z.string()).optional().default([]),
   requiredRoles: z.array(z.string()).optional().default([]),
+  tags: z.array(z.string()).optional().default([]),
+  minTeamSize: z.number().optional().default(1),
 });
 
 // @desc    Get all challenges
@@ -133,6 +135,8 @@ export const seedDefaults = async (req, res, next) => {
         type: "Fullstack",
         requiredSkills: ["Python", "Machine Learning", "Database"],
         requiredRoles: ["Captain", "Doctor", "Navigator"],
+        tags: ["AI", "Healthcare", "Data"],
+        minTeamSize: 3,
         owner: req.user._id
       },
       {
@@ -142,6 +146,8 @@ export const seedDefaults = async (req, res, next) => {
         type: "Fullstack",
         requiredSkills: ["Solidity", "JavaScript", "Web Development"],
         requiredRoles: ["Captain", "Shipwright", "Sniper"],
+        tags: ["Blockchain", "Security", "Finance"],
+        minTeamSize: 2,
         owner: req.user._id
       }
     ];

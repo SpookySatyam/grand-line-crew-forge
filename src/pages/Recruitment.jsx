@@ -96,7 +96,7 @@ export default function Recruitment() {
         </div>
 
         {/* Reaction Column */}
-        <div className="lg:col-span-5 h-[600px] lg:h-auto lg:sticky lg:top-24">
+        <div className="lg:col-span-5 self-start lg:sticky lg:top-24 w-full">
           <CharacterReaction 
             characterKey={roleKey} 
             roleName={selectedChar?.role} 

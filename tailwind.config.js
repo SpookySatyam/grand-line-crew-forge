@@ -18,6 +18,8 @@ export default {
       },
       fontFamily: {
         display: ['"Pirata One"', 'serif', 'cursive'],
+        pirate: ['"Pirata One"', 'serif', 'cursive'],
+        cinzel: ['"Cinzel Decorative"', 'serif'],
         sans: ['"Inter"', 'sans-serif'],
       },
       animation: {

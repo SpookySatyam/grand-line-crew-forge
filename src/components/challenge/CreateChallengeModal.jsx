@@ -10,18 +10,28 @@ export default function CreateChallengeModal({ isOpen, onClose }) {
     title: '',
     description: '',
     difficulty: 'Normal',
-    type: 'Frontend'
+    type: 'Frontend',
+    requiredSkills: '',
+    requiredRoles: '',
+    tags: '',
+    minTeamSize: 2
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (formData.title && formData.description) {
       addChallenge({
-        ...formData,
-        requiredSkills: ['Collaboration', formData.type]
+        title: formData.title,
+        description: formData.description,
+        difficulty: formData.difficulty,
+        type: formData.type,
+        requiredSkills: formData.requiredSkills ? formData.requiredSkills.split(',').map(s => s.trim()).filter(Boolean) : [],
+        requiredRoles: formData.requiredRoles ? formData.requiredRoles.split(',').map(s => s.trim()).filter(Boolean) : [],
+        tags: formData.tags ? formData.tags.split(',').map(s => s.trim()).filter(Boolean) : [],
+        minTeamSize: Number(formData.minTeamSize) || 1
       });
       onClose();
-      setFormData({ title: '', description: '', difficulty: 'Normal', type: 'Frontend' });
+      setFormData({ title: '', description: '', difficulty: 'Normal', type: 'Frontend', requiredSkills: '', requiredRoles: '', tags: '', minTeamSize: 2 });
     }
   };
 
@@ -94,6 +104,51 @@ export default function CreateChallengeModal({ isOpen, onClose }) {
                   <option value="Backend">Backend (Logic)</option>
                   <option value="Fullstack">Fullstack (Complete)</option>
                 </select>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs uppercase tracking-[0.2em] text-parchment/60 mb-2 font-sans font-bold">Required Skills (comma separated)</label>
+              <input 
+                type="text" 
+                value={formData.requiredSkills}
+                onChange={e => setFormData({...formData, requiredSkills: e.target.value})}
+                className="w-full bg-black/50 border border-gold/30 rounded-lg p-3 text-parchment focus:border-gold focus:outline-none transition-all"
+                placeholder="React, Node.js, Design"
+              />
+            </div>
+            
+            <div>
+              <label className="block text-xs uppercase tracking-[0.2em] text-parchment/60 mb-2 font-sans font-bold">Required Roles (comma separated)</label>
+              <input 
+                type="text" 
+                value={formData.requiredRoles}
+                onChange={e => setFormData({...formData, requiredRoles: e.target.value})}
+                className="w-full bg-black/50 border border-gold/30 rounded-lg p-3 text-parchment focus:border-gold focus:outline-none transition-all"
+                placeholder="Navigator, Shipwright"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs uppercase tracking-[0.2em] text-parchment/60 mb-2 font-sans font-bold">Tags / Interests (comma separated)</label>
+                <input 
+                  type="text" 
+                  value={formData.tags}
+                  onChange={e => setFormData({...formData, tags: e.target.value})}
+                  className="w-full bg-black/50 border border-gold/30 rounded-lg p-3 text-parchment focus:border-gold focus:outline-none transition-all"
+                  placeholder="AI, Security"
+                />
+              </div>
+              <div>
+                <label className="block text-xs uppercase tracking-[0.2em] text-parchment/60 mb-2 font-sans font-bold">Minimum Team Size</label>
+                <input 
+                  type="number" 
+                  min="1"
+                  value={formData.minTeamSize}
+                  onChange={e => setFormData({...formData, minTeamSize: e.target.value})}
+                  className="w-full bg-black/50 border border-gold/30 rounded-lg p-3 text-parchment focus:border-gold focus:outline-none transition-all"
+                />
               </div>
             </div>
             

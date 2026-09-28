@@ -39,38 +39,62 @@ export const calculateBalanceScore = (crewMembers) => {
 export const calculateCompatibilityScore = (crewMembers, challenge) => {
   if (!crewMembers || crewMembers.length === 0 || !challenge) return 0;
 
+  // 1. Team Size Check (Strict requirement - returns 0 if they don't have enough members)
+  const teamSize = crewMembers.length;
+  if (challenge.minTeamSize && teamSize < challenge.minTeamSize) {
+    return 0; // Not eligible
+  }
+  
   const crewRoles = new Set(crewMembers.map(m => m.role.toLowerCase()));
   const allCrewSkills = new Set(
     crewMembers.reduce((acc, curr) => acc.concat((curr.skills || []).map(s => s.toLowerCase())), [])
   );
+  const allCrewInterests = new Set(
+    crewMembers.reduce((acc, curr) => acc.concat((curr.interests || []).map(i => i.toLowerCase())), [])
+  );
 
   const reqRoles = challenge.requiredRoles || [];
   const reqSkills = challenge.requiredSkills || [];
+  const tags = challenge.tags || [];
 
   let rolePoints = 0;
   let skillPoints = 0;
+  let interestPoints = 0;
 
-  // Evaluate Roles (50% weight)
-  if (reqRoles.length === 0) {
-    rolePoints = 50; // Free points if no specific roles required
-  } else {
-    let matchedRoles = 0;
-    reqRoles.forEach(r => {
-      if (crewRoles.has(r.toLowerCase())) matchedRoles++;
-    });
-    rolePoints = (matchedRoles / reqRoles.length) * 50;
-  }
-
-  // Evaluate Skills (50% weight)
+  // Evaluate Skills (50% weight) - Strict validation
   if (reqSkills.length === 0) {
-    skillPoints = 50; // Free points if no specific skills required
+    skillPoints = 50; 
   } else {
     let matchedSkills = 0;
     reqSkills.forEach(s => {
       if (allCrewSkills.has(s.toLowerCase())) matchedSkills++;
     });
+    // For strictness, if 0 skills match when they are required, the score shouldn't just be low, it should heavily penalize.
+    // We'll keep it proportional but weight it highly (50 out of 100).
     skillPoints = (matchedSkills / reqSkills.length) * 50;
   }
 
-  return Math.floor(rolePoints + skillPoints);
+  // Evaluate Roles (30% weight)
+  if (reqRoles.length === 0) {
+    rolePoints = 30; 
+  } else {
+    let matchedRoles = 0;
+    reqRoles.forEach(r => {
+      if (crewRoles.has(r.toLowerCase())) matchedRoles++;
+    });
+    rolePoints = (matchedRoles / reqRoles.length) * 30;
+  }
+
+  // Evaluate Interests/Tags (20% weight)
+  if (tags.length === 0) {
+    interestPoints = 20;
+  } else {
+    let matchedTags = 0;
+    tags.forEach(t => {
+      if (allCrewInterests.has(t.toLowerCase())) matchedTags++;
+    });
+    interestPoints = (matchedTags / tags.length) * 20;
+  }
+
+  return Math.floor(skillPoints + rolePoints + interestPoints);
 };

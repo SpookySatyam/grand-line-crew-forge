@@ -17,11 +17,19 @@ export const formatAuthError = (err, context = 'general') => {
   // Account already exists
   if (
     type === 'user_already_exists' || 
-    code === 409 || 
+    (code === 409 && context === 'signup') || 
     message.includes('already exists') || 
     message.includes('duplicate')
   ) {
     return 'An account with this email address already exists. Try setting sail by logging in.';
+  }
+
+  // Active session exists during login/session creation
+  if (
+    type === 'user_session_already_exists' ||
+    (code === 409 && message.includes('session is active'))
+  ) {
+    return 'A session is already active. Please try again.';
   }
 
   // Invalid credentials
@@ -96,7 +104,6 @@ const formatUser = (acc) => {
     $id: acc.$id,
     name: acc.name || 'Captain',
     email: acc.email,
-    emailVerification: true,
   };
 };
 
@@ -116,11 +123,32 @@ export const useAuthStore = create((set) => ({
         // No active session
       }
 
-      await account.createEmailPasswordSession(email, password);
+      try {
+        await account.createEmailPasswordSession(email, password);
+      } catch (sessionErr) {
+        if (
+          sessionErr?.type === 'user_session_already_exists' ||
+          sessionErr?.code === 409 ||
+          sessionErr?.message?.toLowerCase().includes('session is active')
+        ) {
+          // A session is already active; clear and retry
+          try {
+            await account.deleteSession('current');
+            await account.createEmailPasswordSession(email, password);
+          } catch (_) {
+            const existingAcc = await account.get().catch(() => null);
+            if (!existingAcc || (existingAcc.email && existingAcc.email.toLowerCase() !== email.toLowerCase())) {
+              throw sessionErr;
+            }
+          }
+        } else {
+          throw sessionErr;
+        }
+      }
+
       const acc = await account.get();
       const user = formatUser(acc);
       clearCachedToken();
-      sessionStorage.setItem('grand_line_session_active', 'true');
       set({ user, loading: false, error: null });
       return user;
     } catch (err) {
@@ -145,13 +173,10 @@ export const useAuthStore = create((set) => ({
       }
       await account.createEmailPasswordSession(email, password);
 
-      // 3. Dispatch verification email (Disabled)
-
-      // 4. Fetch current user
+      // 3. Fetch current user
       const acc = await account.get();
       const user = formatUser(acc);
       clearCachedToken();
-      sessionStorage.setItem('grand_line_session_active', 'true');
       set({ user, loading: false, error: null });
       return user;
     } catch (err) {
@@ -168,33 +193,20 @@ export const useAuthStore = create((set) => ({
       console.error('Logout error:', err);
     } finally {
       clearCachedToken();
-      sessionStorage.removeItem('grand_line_session_active');
-      set({ user: null, error: null });
+      set({ user: null, loading: false, error: null });
     }
   },
 
   fetchMe: async () => {
     try {
       set({ loading: true, error: null });
-      
-      const isSessionActive = sessionStorage.getItem('grand_line_session_active');
-      if (!isSessionActive) {
-        try {
-          await account.deleteSession('current');
-        } catch (_) {}
-        clearCachedToken();
-        set({ user: null, loading: false });
-        return null;
-      }
-
       const acc = await account.get();
       const user = formatUser(acc);
-      set({ user, loading: false });
+      set({ user, loading: false, error: null });
       return user;
-    } catch (err) {
+    } catch (_err) {
       clearCachedToken();
-      sessionStorage.removeItem('grand_line_session_active');
-      set({ user: null, loading: false });
+      set({ user: null, loading: false, error: null });
       return null;
     }
   },
@@ -245,8 +257,12 @@ export const useAuthStore = create((set) => ({
   },
 }));
 
-// Listen for 401s to force logout
-window.addEventListener('auth:unauthorized', () => {
+// Listen for 401s to force logout only when Appwrite session is actually invalid
+window.addEventListener('auth:unauthorized', async () => {
   clearCachedToken();
-  useAuthStore.setState({ user: null });
+  try {
+    await account.get();
+  } catch (_err) {
+    useAuthStore.setState({ user: null });
+  }
 });
