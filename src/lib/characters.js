@@ -3,7 +3,7 @@ export const characters = {
     id: "luffy",
     name: "Monkey D. Luffy",
     role: "Captain",
-    image: "/assets/one-piece/00-luffy-solo.png",
+    image: "/assets/one-piece/00-luffy-solo.jpg",
     message: "Every great crew needs someone willing to lead."
   },
   navigator: {

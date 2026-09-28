@@ -75,7 +75,7 @@ export const createRecruit = async (req, res, next) => {
   } catch (error) {
     if (error instanceof z.ZodError) {
       res.status(400);
-      return next(new Error(error.errors[0].message));
+      return next(new Error(error.issues?.[0]?.message || error.errors?.[0]?.message || 'Validation Error'));
     }
     next(error);
   }
@@ -110,7 +110,7 @@ export const updateRecruit = async (req, res, next) => {
   } catch (error) {
     if (error instanceof z.ZodError) {
       res.status(400);
-      return next(new Error(error.errors[0].message));
+      return next(new Error(error.issues?.[0]?.message || error.errors?.[0]?.message || 'Validation Error'));
     }
     next(error);
   }
