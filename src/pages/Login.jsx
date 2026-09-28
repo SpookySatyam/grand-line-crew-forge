@@ -16,10 +16,14 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await login(email, password);
-      navigate(from, { replace: true });
+      const user = await login(email, password);
+      if (user?.emailVerification) {
+        navigate(from, { replace: true });
+      } else {
+        navigate('/verify-email', { replace: true });
+      }
     } catch (_err) {
-      // Error is handled by store
+      // Error is handled and displayed by store
     }
   };
 
@@ -30,8 +34,6 @@ export default function Login() {
         animate={{ opacity: 1, y: 0 }}
         className="bg-black/60 backdrop-blur-md p-8 rounded-xl border-2 border-gold/40 shadow-2xl relative overflow-hidden"
       >
-
-        
         <div className="relative z-10">
           <div className="flex justify-center mb-6">
             <Skull className="w-12 h-12 text-pirateRed drop-shadow-md" />
@@ -65,9 +67,17 @@ export default function Login() {
             </div>
 
             <div>
-              <label className="block text-xs uppercase tracking-widest text-gold/80 mb-2 font-display">
-                Password
-              </label>
+              <div className="flex justify-between items-center mb-2">
+                <label className="block text-xs uppercase tracking-widest text-gold/80 font-display">
+                  Password
+                </label>
+                <Link
+                  to="/forgot-password"
+                  className="text-xs text-gold/80 hover:text-white transition-colors underline decoration-gold/30 font-sans"
+                >
+                  Forgot Password?
+                </Link>
+              </div>
               <input
                 type="password"
                 required

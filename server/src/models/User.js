@@ -2,6 +2,12 @@ import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema(
   {
+    appwriteId: {
+      type: String,
+      unique: true,
+      sparse: true,
+      index: true,
+    },
     name: {
       type: String,
       required: true,
@@ -16,7 +22,8 @@ const userSchema = new mongoose.Schema(
     },
     passwordHash: {
       type: String,
-      required: true,
+      required: false,
+      default: '',
     },
     role: {
       type: String,

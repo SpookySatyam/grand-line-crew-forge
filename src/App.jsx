@@ -10,6 +10,9 @@ import CrewFormation from './pages/CrewFormation';
 import ChallengeAssignment from './pages/ChallengeAssignment';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
+import VerifyEmail from './pages/VerifyEmail';
 import ProtectedRoute from './components/ProtectedRoute';
 import NotFound from './pages/NotFound';
 
@@ -36,6 +39,9 @@ function App() {
           <Route index element={<Landing />} />
           <Route path="login" element={<Login />} />
           <Route path="signup" element={<Signup />} />
+          <Route path="forgot-password" element={<ForgotPassword />} />
+          <Route path="reset-password" element={<ResetPassword />} />
+          <Route path="verify-email" element={<VerifyEmail />} />
 
           {/* Protected routes */}
           <Route path="recruit" element={<ProtectedRoute><Recruitment /></ProtectedRoute>} />

@@ -37,7 +37,7 @@ export default function Navbar() {
         </Link>
         
         <nav className="flex flex-wrap justify-center items-center gap-6 font-display text-xs md:text-sm tracking-[0.15em] uppercase">
-          {user && navItems.map((item) => {
+          {user && user.emailVerification && navItems.map((item) => {
             const isActive = location.pathname === item.path;
             const Icon = item.icon;
             

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Skull } from 'lucide-react';
 import { useAuthStore } from '../store/useAuthStore';
 
@@ -10,17 +10,14 @@ export default function Signup() {
   const [password, setPassword] = useState('');
   const { signup, loading, error } = useAuthStore();
   const navigate = useNavigate();
-  const location = useLocation();
-
-  const from = location.state?.from?.pathname || '/dashboard';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await signup(name, email, password);
-      navigate(from, { replace: true });
+      navigate('/verify-email', { replace: true });
     } catch (_err) {
-      // Error is handled by store
+      // Error is handled and displayed by store
     }
   };
 
@@ -31,8 +28,6 @@ export default function Signup() {
         animate={{ opacity: 1, y: 0 }}
         className="bg-black/60 backdrop-blur-md p-8 rounded-xl border-2 border-gold/40 shadow-2xl relative overflow-hidden"
       >
-
-        
         <div className="relative z-10">
           <div className="flex justify-center mb-6">
             <Skull className="w-12 h-12 text-pirateRed drop-shadow-md" />
@@ -86,10 +81,11 @@ export default function Signup() {
               <input
                 type="password"
                 required
+                minLength={8}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full bg-black/50 border border-gold/30 rounded p-3 text-parchment font-sans focus:outline-none focus:border-gold transition-colors"
-                placeholder="••••••••"
+                placeholder="At least 8 characters"
               />
             </div>
 
