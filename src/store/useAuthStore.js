@@ -120,6 +120,7 @@ export const useAuthStore = create((set) => ({
       const acc = await account.get();
       const user = formatUser(acc);
       clearCachedToken();
+      sessionStorage.setItem('grand_line_session_active', 'true');
       set({ user, loading: false, error: null });
       return user;
     } catch (err) {
@@ -150,6 +151,7 @@ export const useAuthStore = create((set) => ({
       const acc = await account.get();
       const user = formatUser(acc);
       clearCachedToken();
+      sessionStorage.setItem('grand_line_session_active', 'true');
       set({ user, loading: false, error: null });
       return user;
     } catch (err) {
@@ -166,6 +168,7 @@ export const useAuthStore = create((set) => ({
       console.error('Logout error:', err);
     } finally {
       clearCachedToken();
+      sessionStorage.removeItem('grand_line_session_active');
       set({ user: null, error: null });
     }
   },
@@ -173,12 +176,24 @@ export const useAuthStore = create((set) => ({
   fetchMe: async () => {
     try {
       set({ loading: true, error: null });
+      
+      const isSessionActive = sessionStorage.getItem('grand_line_session_active');
+      if (!isSessionActive) {
+        try {
+          await account.deleteSession('current');
+        } catch (_) {}
+        clearCachedToken();
+        set({ user: null, loading: false });
+        return null;
+      }
+
       const acc = await account.get();
       const user = formatUser(acc);
       set({ user, loading: false });
       return user;
     } catch (err) {
       clearCachedToken();
+      sessionStorage.removeItem('grand_line_session_active');
       set({ user: null, loading: false });
       return null;
     }
