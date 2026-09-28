@@ -22,7 +22,7 @@ export default function CharacterImage({ image, roleName }) {
       <img 
         src={image} 
         alt={roleName} 
-        className="w-56 h-72 object-cover object-top rounded-xl border-4 border-gold shadow-[0_0_20px_rgba(212,175,55,0.2)] group-hover:shadow-[0_0_30px_rgba(212,175,55,0.4)] transition-all duration-500"
+        className="w-56 h-72 object-cover object-center rounded-xl border-4 border-gold shadow-[0_0_20px_rgba(212,175,55,0.2)] group-hover:shadow-[0_0_30px_rgba(212,175,55,0.4)] transition-all duration-500"
       />
     </motion.div>
   );
