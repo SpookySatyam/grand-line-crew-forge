@@ -24,11 +24,11 @@ export default function CrewFormation() {
     }
   };
 
-  if (participants.length < 3) {
+  if (participants.length < 2) {
     return (
       <div className="max-w-4xl mx-auto p-6 my-12 text-center relative z-10 bg-darkBrown/80 backdrop-blur-md rounded-2xl border border-gold/30">
         <h1 className="text-4xl font-display text-pirateRed mb-4 drop-shadow-md">Not Enough Recruits</h1>
-        <p className="text-xl text-parchment/80 mb-8 font-sans">You need at least {teamSize} recruits in the system to form a proper crew of size {teamSize}. Currently have {participants.length}.</p>
+        <p className="text-xl text-parchment/80 mb-8 font-sans">You need at least 2 recruits in the system to form a proper crew. Currently have {participants.length}.</p>
         <Link to="/recruit" className="inline-block px-8 py-4 bg-gold/20 border-2 border-gold text-gold rounded hover:bg-gold hover:text-black font-display tracking-widest transition-all">
           Back to Recruitment
         </Link>
@@ -49,14 +49,20 @@ export default function CrewFormation() {
           >
             <TeamSizeSelector teamSize={teamSize} setTeamSize={setTeamSize} />
             <motion.button 
-              whileHover={{ scale: 1.05, boxShadow: '0 0 30px rgba(212,175,55,0.4)' }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={participants.length >= teamSize ? { scale: 1.05, boxShadow: '0 0 30px rgba(212,175,55,0.4)' } : {}}
+              whileTap={participants.length >= teamSize ? { scale: 0.95 } : {}}
               onClick={handleFormCrews} 
-              className="px-12 py-6 bg-gradient-to-r from-pirateRed to-red-900 border-2 border-gold text-parchment font-display tracking-[0.2em] text-2xl rounded-xl shadow-[0_15px_30px_rgba(186,12,12,0.4)] transition-all"
+              disabled={participants.length < teamSize}
+              className="px-12 py-6 bg-gradient-to-r from-pirateRed to-red-900 border-2 border-gold text-parchment font-display tracking-[0.2em] text-2xl rounded-xl shadow-[0_15px_30px_rgba(186,12,12,0.4)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Compass className="inline-block w-8 h-8 mr-3 animate-spin-slow" />
               COMMENCE FORMATION
             </motion.button>
+            {participants.length < teamSize && (
+              <p className="mt-4 text-pirateRed font-sans">
+                You need at least {teamSize} recruits to form a crew of this size. (You currently have {participants.length})
+              </p>
+            )}
           </motion.div>
         )}
 
