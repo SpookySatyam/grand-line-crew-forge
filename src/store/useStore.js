@@ -85,6 +85,18 @@ export const useStore = create((set, get) => ({
     }
   },
 
+  addChallenge: async (challenge) => {
+    try {
+      const data = await apiFetch('/challenges', {
+        method: 'POST',
+        body: JSON.stringify(challenge),
+      });
+      set((state) => ({ challenges: [data.data, ...state.challenges] }));
+    } catch (error) {
+      throw error;
+    }
+  },
+
   formCrews: async (teamSize) => {
     try {
       const data = await apiFetch('/crews/form', {

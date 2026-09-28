@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useStore } from '../store/useStore';
 import { secondaryCharacters } from '../lib/characters';
 import { Link } from 'react-router-dom';
@@ -7,8 +7,13 @@ import ChallengeCard from '../components/challenge/ChallengeCard';
 import ChallengeLibrary from '../components/challenge/ChallengeLibrary';
 
 export default function ChallengeAssignment() {
-  const { crews, assignChallenges } = useStore();
+  const { crews, challenges, assignChallenges, fetchCrews, fetchChallenges } = useStore();
   const [isAssigning, setIsAssigning] = React.useState(false);
+
+  useEffect(() => {
+    fetchCrews();
+    fetchChallenges();
+  }, [fetchCrews, fetchChallenges]);
 
   if (crews.length === 0) {
     return (
@@ -44,7 +49,7 @@ export default function ChallengeAssignment() {
         <div className="text-center mb-12">
           <button 
             onClick={handleAssign}
-            disabled={isAssigning}
+            disabled={isAssigning || !challenges || challenges.length === 0}
             className="px-8 py-4 bg-gradient-to-r from-pirateRed to-red-900 border-2 border-gold text-parchment font-display tracking-[0.1em] text-xl rounded shadow-[0_10px_20px_rgba(186,12,12,0.4)] transition-all hover:scale-105 disabled:opacity-50"
           >
             {isAssigning ? 'ASSIGNING...' : 'AUTO ASSIGN CHALLENGES'}

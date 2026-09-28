@@ -17,9 +17,8 @@ export default function CreateChallengeModal({ isOpen, onClose }) {
     e.preventDefault();
     if (formData.title && formData.description) {
       addChallenge({
-        id: crypto.randomUUID(),
         ...formData,
-        requirements: ['Collaboration', formData.type]
+        requiredSkills: ['Collaboration', formData.type]
       });
       onClose();
       setFormData({ title: '', description: '', difficulty: 'Normal', type: 'Frontend' });

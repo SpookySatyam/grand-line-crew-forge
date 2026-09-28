@@ -23,15 +23,17 @@ export default function ChallengeLibrary() {
         </button>
       </div>
 
-      {challenges.length === 0 ? (
+      {!challenges || challenges.length === 0 ? (
         <div className="text-center p-8">
           <p className="text-parchment/60 font-sans italic">No missions documented. Create one to begin.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {challenges.map((challenge, idx) => (
+          {(challenges || []).map((challenge, idx) => {
+            if (!challenge) return null;
+            return (
             <motion.div 
-              key={challenge.id}
+              key={challenge._id || idx}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.1 }}
@@ -62,7 +64,8 @@ export default function ChallengeLibrary() {
                 ))}
               </div>
             </motion.div>
-          ))}
+            );
+          })}
         </div>
       )}
 
