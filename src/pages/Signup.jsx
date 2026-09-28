@@ -31,7 +31,7 @@ export default function Signup() {
         animate={{ opacity: 1, y: 0 }}
         className="bg-black/60 backdrop-blur-md p-8 rounded-xl border-2 border-gold/40 shadow-2xl relative overflow-hidden"
       >
-        <div className="absolute inset-0 bg-[url('/assets/one-piece/02-brook-secondary.jpg')] bg-cover bg-center opacity-10 mix-blend-overlay" />
+        <div className="absolute inset-0 bg-[url('/assets/one-piece/ship-bg.jpg')] bg-cover bg-center opacity-20 mix-blend-overlay" />
         
         <div className="relative z-10">
           <div className="flex justify-center mb-6">
