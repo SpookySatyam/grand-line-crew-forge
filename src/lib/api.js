@@ -35,8 +35,12 @@ const getAppwriteJwt = async () => {
 };
 
 export const apiFetch = async (endpoint, options = {}) => {
-  const baseUrl = import.meta.env.VITE_API_URL || '';
-  const url = `${baseUrl}/api${endpoint}`;
+  let baseUrl = import.meta.env.VITE_API_URL || '';
+  // Remove trailing slash if present
+  if (baseUrl.endsWith('/')) baseUrl = baseUrl.slice(0, -1);
+  // Ensure we don't duplicate /api if the env variable already includes it
+  const basePath = baseUrl.endsWith('/api') ? baseUrl : `${baseUrl}/api`;
+  const url = `${basePath}${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`;
 
   const token = await getAppwriteJwt();
   const authHeaders = token ? { Authorization: `Bearer ${token}` } : {};
