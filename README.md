@@ -94,9 +94,9 @@ npm test
 
 | Endpoint | Method | Auth Req. | Description |
 |----------|--------|-----------|-------------|
-| `/api/auth/signup` | POST | No | Register a new user and set JWT cookie |
-| `/api/auth/login` | POST | No | Authenticate user and set JWT cookie |
-| `/api/auth/logout` | POST | No | Clear the JWT cookie |
+| `/api/auth/signup` | POST | Yes | Register a new user and set JWT cookie |
+| `/api/auth/login` | POST | Yes | Authenticate user and set JWT cookie |
+| `/api/auth/logout` | POST | Yes | Clear the JWT cookie |
 | `/api/auth/me` | GET | Yes | Get the currently authenticated user |
 | `/api/recruits` | GET | Yes | List all recruits owned by the user |
 | `/api/recruits` | POST | Yes | Create a new recruit |
